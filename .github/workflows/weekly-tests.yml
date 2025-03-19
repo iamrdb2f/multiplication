@@ -2,8 +2,8 @@ name: Weekly Test Execution
 
 on:
   schedule:
-    - cron: '30 10 * * 0' # To run tests every Sunday at 10:30 AM UTC
-  workflow_dispatch: # To trigger the workflow manually from GitHub Actions
+    - cron: '30 10 * * 0' # Run tests every Sunday at 10:30 AM UTC
+  workflow_dispatch: # Manual trigger from GitHub Actions
 
 jobs:
   test:
@@ -27,10 +27,13 @@ jobs:
           sudo ln -s /opt/allure/bin/allure /usr/local/bin/allure
 
       - name: Build and test with Maven
-        run: mvn clean test
+        run: mvn clean test | tee target/execution-log.txt
 
       - name: Generate Allure report
-        run: mvn allure:report
+        run: mvn allure:report | tee -a target/execution-log.txt
+
+      - name: Verify Allure Results Directory
+        run: ls -l target/allure-results | tee -a target/execution-log.txt
 
       - name: Archive Allure Report
         uses: actions/upload-artifact@v4
@@ -43,6 +46,7 @@ jobs:
         run: |
           mkdir -p gh-pages
           cp -r target/site/allure-maven-plugin/* gh-pages/
+          cp -r target/allure-results gh-pages/allure-results
           touch gh-pages/.nojekyll
 
       - name: Deploy to GitHub Pages
@@ -50,11 +54,12 @@ jobs:
         with:
           branch: gh-pages
           folder: gh-pages
-          token: ${{ secrets.GH_PAT }}  # Utilisation du PAT pour déploiement
+          clean: true
+          token: ${{ secrets.GH_PAT }}
 
       - name: Archive Allure Results (ZIP)
         run: |
-          zip -r allure-report.zip target/site/allure-maven-plugin
+          zip -r allure-report.zip target/site/allure-maven-plugin target/allure-results target/execution-log.txt
 
       - name: Send email with test report
         uses: dawidd6/action-send-mail@v3
