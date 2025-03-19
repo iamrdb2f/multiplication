@@ -2,7 +2,7 @@ name: Weekly Test Execution
 
 on:
   schedule:
-    - cron: '30 10 * * 0' # To run tests every sunday at 10:30 AM UTC
+    - cron: '30 10 * * 0' # To run tests every Sunday at 10:30 AM UTC
   workflow_dispatch: # To trigger the workflow manually from GitHub Actions
 
 jobs:
@@ -32,6 +32,25 @@ jobs:
       - name: Generate Allure report
         run: mvn allure:report
 
+      - name: Archive Allure Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report
+          path: target/site/allure-maven-plugin
+
+      - name: Deploy Allure Report to GitHub Pages
+        if: success()
+        run: |
+          mkdir -p gh-pages
+          cp -r target/site/allure-maven-plugin/* gh-pages/
+          touch gh-pages/.nojekyll
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages
+          folder: gh-pages
+
       - name: Archive Allure Results (ZIP)
         run: |
           zip -r allure-report.zip target/site/allure-maven-plugin
@@ -46,5 +65,5 @@ jobs:
           from: "GitHub Actions"
           to: "dev@rolandguissony.com"
           subject: "Test Results - Multiplication Project"
-          body: "The test execution has completed successfully. The Allure report is attached as a ZIP file."
+          body: "The test execution has completed successfully. You can download the Allure report from the GitHub artifacts or view it online."
           attachments: allure-report.zip
