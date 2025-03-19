@@ -2,8 +2,8 @@ name: Weekly Test Execution
 
 on:
   schedule:
-    - cron: '30 10 * * 0' # To run tests every Sunday at 10:30 AM UTC
-  workflow_dispatch: # To trigger the workflow manually from GitHub Actions
+    - cron: '30 10 * * 0'
+  workflow_dispatch:
 
 jobs:
   test:
@@ -63,15 +63,15 @@ jobs:
       - name: Prepare Allure Report for Deployment
         if: success()
         run: |
-          mkdir -p gh-pages
-          cp -r target/site/allure-maven-plugin/* gh-pages/
-          touch gh-pages/.nojekyll
+          mkdir -p allure-report
+          cp -r target allure-report/
+          touch allure-report/.nojekyll
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
-          folder: gh-pages
+          folder: allure-report
           token: ${{ secrets.GH_PAT }}
 
       - name: Archive Allure Results and Report (ZIP)
