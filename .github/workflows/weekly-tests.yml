@@ -44,7 +44,7 @@ jobs:
           username: "dev@rolandguissony.com"
           password: "${{ secrets.EMAIL_PASSWORD }}"
           from: "GitHub Actions"
-          to: "roigounyel@gmail.com"
+          to: "dev@rolandguissony.com"
           subject: "Test Results - Multiplication Project"
           body: "The test execution has completed successfully. The Allure report is attached as a ZIP file."
           attachments: allure-report.zip
