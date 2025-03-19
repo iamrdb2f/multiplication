@@ -65,8 +65,7 @@ jobs:
         run: |
           mkdir -p gh-pages
           cp -r target/site/allure-maven-plugin/* gh-pages/
-          cp -r target/allure-results gh-pages/  # Intégrer les résultats des tests
-          mv gh-pages/index.html gh-pages/
+          cp -r target/allure-results gh-pages/
           touch gh-pages/.nojekyll
 
       - name: Deploy to GitHub Pages
