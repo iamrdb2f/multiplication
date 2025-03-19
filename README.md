@@ -1,21 +1,48 @@
-# Tables de Multiplication
+# Multiplication tables project
 
-## Problème
-Écrire un programme Java qui prend un entier `n` en entrée et affiche sa table de multiplication de `1` à `10`.
+## Description
+A Java application that generates the multiplication table for a given integer.
 
-## Exemple d'entrée / sortie
+## Features
+- Reads an integer `n` from standard input.
+- Prints the multiplication table from `1` to `10`.
+- Includes automated tests with JUnit 5 and Allure reporting.
+- Configured with GitHub Actions to run tests weekly and send results via email.
 
-### **Entrée : 5** 
+## Requirements
+- Java 11+
+- Maven 3+
+- **Allure CLI** (optional for local report generation)
 
-### **Sortie :**
-- 5 x 1 = 5 
-- 5 x 2 = 10 
-- 5 x 3 = 15 
-- 5 x 4 = 20 
-- 5 x 5 = 25 
-- 5 x 6 = 30 
-- 5 x 7 = 35 
-- 5 x 8 = 40 
-- 5 x 9 = 45 
-- 5 x 10 = 50
+## 🔧 Installation
+
+### Clone the repository
+```sh
+git clone https://github.com/your-username/multiplication.git
+```
+```sh
+cd multiplication
+```
+
+### Run the program
+```sh
+mvn compile exec:java
+```
+
+### Run the tests
+```sh
+mvn test
+```
+
+### Generate Allure report
+```sh
+mvn allure:report
+```
+```sh
+allure serve target/allure-results
+```
+
+## ⚙️ CI/CD Automation
+This project is integrated with GitHub Actions, running tests every Sunday at 10:30 AM UTC, and sending results via email.
+
 
