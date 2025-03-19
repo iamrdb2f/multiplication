@@ -63,16 +63,19 @@ jobs:
       - name: Prepare Allure Report for Deployment
         if: success()
         run: |
-          mkdir -p allure-report
-          cp -r target allure-report/
-          touch allure-report/.nojekyll
+          mkdir -p gh-pages
+          cp -r target/site/allure-maven-plugin/* gh-pages/
+          cp -r target/allure-results gh-pages/  # Intégrer les résultats des tests
+          mv gh-pages/index.html gh-pages/
+          touch gh-pages/.nojekyll
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
-          folder: allure-report
+          folder: gh-pages
           token: ${{ secrets.GH_PAT }}
+          clean: true
 
       - name: Archive Allure Results and Report (ZIP)
         run: |
