@@ -38,7 +38,7 @@ jobs:
           name: allure-report
           path: target/site/allure-maven-plugin
 
-      - name: Deploy Allure Report to GitHub Pages
+      - name: Prepare Allure Report for Deployment
         if: success()
         run: |
           mkdir -p gh-pages
@@ -50,6 +50,7 @@ jobs:
         with:
           branch: gh-pages
           folder: gh-pages
+          token: ${{ secrets.GH_PAT }}  # Utilisation du PAT pour déploiement
 
       - name: Archive Allure Results (ZIP)
         run: |
