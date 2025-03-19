@@ -27,10 +27,17 @@ jobs:
           sudo ln -s /opt/allure/bin/allure /usr/local/bin/allure
 
       - name: Create Target Directory
-        run: mkdir -p target
+        run: mkdir -p target/allure-results
 
       - name: Build and test with Maven
         run: mvn clean test | tee target/execution-log.txt
+
+      - name: Verify Allure Results Directory
+        run: |
+          if [ -z "$(ls -A target/allure-results 2>/dev/null)" ]; then
+            echo "❌ Allure results directory is empty. Tests might not have generated results."
+            exit 1
+          fi
 
       - name: Generate Allure report
         run: mvn allure:report | tee -a target/execution-log.txt
@@ -40,6 +47,12 @@ jobs:
         with:
           name: execution-log
           path: target/execution-log.txt
+
+      - name: Archive Allure Results
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results
+          path: target/allure-results
 
       - name: Archive Allure Report
         uses: actions/upload-artifact@v4
@@ -61,9 +74,9 @@ jobs:
           folder: gh-pages
           token: ${{ secrets.GH_PAT }}
 
-      - name: Archive Allure Results (ZIP)
+      - name: Archive Allure Results and Report (ZIP)
         run: |
-          zip -r allure-report.zip target/site/allure-maven-plugin target/execution-log.txt
+          zip -r allure-report.zip target/site/allure-maven-plugin target/allure-results target/execution-log.txt
 
       - name: Send email with test report
         uses: dawidd6/action-send-mail@v3
