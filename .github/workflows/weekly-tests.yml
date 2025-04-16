@@ -2,9 +2,9 @@ name: Daily Test Execution - Morning and Evening
 
 on:
   schedule:
-    - cron: '0 10 * * *'  # Tous les jours à 10h (UTC)
-    - cron: '0 18 * * *'  # Tous les jours à 18h (UTC)
-  workflow_dispatch:     # Permet un déclenchement manuel
+    - cron: '0 10 * * *'
+    - cron: '0 18 * * *' 
+  workflow_dispatch:     
 
 jobs:
   test:
